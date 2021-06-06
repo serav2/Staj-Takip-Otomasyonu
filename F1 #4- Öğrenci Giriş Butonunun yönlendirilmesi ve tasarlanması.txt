@@ -1,0 +1,37 @@
+ private void btnOgrenciGiris(object sender, EventArgs e)
+        {
+            string no = txtO_no.Text.Trim();
+            string sifre = txtO_sifre.Text.Trim();
+            try
+            {
+                if (no == "" || sifre == "")
+                {
+                    MessageBox.Show("lütfen tüm alanları doldurduğunuza emin olun.", "DİKKAT!!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+                baglanti.Open();
+                SqlParameter prm1 = new SqlParameter("@ogrencino", no);
+                SqlParameter prm2 = new SqlParameter("@sifre", sifre);
+                SqlCommand cmd = new SqlCommand("select * from OgrenciKayit where OgrenciNo=@ogrencino AND OgrenciTC=@sifre", baglanti);
+                cmd.Parameters.Add(prm1);
+                cmd.Parameters.Add(prm2);
+                DataTable dt = new DataTable();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                if (dt.Rows.Count > 0)
+                {
+                    OgrenciGiris ogrenciGiris = new OgrenciGiris();
+                    ogrenciGiris.Show();
+                    this.Hide();
+                }
+
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("Kullanıcı Adı ya da Şifre yanlış.", "HATALI GİRİŞ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            baglanti.Close();
+        }
+
+       
