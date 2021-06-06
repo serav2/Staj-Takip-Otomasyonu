@@ -1,0 +1,30 @@
+
+        private void btnGiris_Click(object sender, EventArgs e)
+        {
+            string ad = txtK_Ad.Text.Trim();
+            string sifre = txtSifre.Text.Trim();
+            try
+            {
+                if (ad == "" || sifre == "")
+                {
+                    MessageBox.Show("lütfen tüm alanları doldurduğunuza emin olun.", "DİKKAT!!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+                else
+                {
+                    if (txtK_Ad.Text=="Firat" && txtSifre.Text=="1234")
+                    {
+                        Kurum kurum = new Kurum();
+                        kurum.Show();
+                        this.Hide();
+                    }
+                }
+
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("Kullanıcı Adı ya da Şifre yanlış.", "HATALI GİRİŞ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            baglanti.Close();
+        }
