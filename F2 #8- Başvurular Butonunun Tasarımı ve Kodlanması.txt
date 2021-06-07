@@ -1,0 +1,51 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.SqlClient;
+
+namespace STAJ_TAKİP_SİSTEMİ
+{
+    public partial class Kurum : Form
+    {
+        SqlConnection baglanti;
+        SqlCommand komut;
+        SqlDataAdapter da;
+        public Kurum()
+        {
+            InitializeComponent();
+        }
+        void basvurugetir()
+        {
+            baglanti = new SqlConnection("Data Source=localhost;Initial Catalog=StajSistemi;Integrated Security=True");
+            baglanti.Open();
+            da = new SqlDataAdapter("SELECT *FROM OgrenciBasvuru", baglanti);
+            DataTable tablo = new DataTable();
+            da.Fill(tablo);
+            dataGridView1.DataSource = tablo;
+            baglanti.Close();
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            basvurugetir();
+        }
+       
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Kurum ksd = new Kurum();
+            ksd.ShowDialog();
+        }
+
+       
+
+        private void Kurum_Load(object sender, EventArgs e)
+        {
+            basvurugetir();
+        }
+    }
+}
