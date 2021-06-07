@@ -1,0 +1,35 @@
+private void btnFirmGiris_Click(object sender, EventArgs e)
+        {
+            string isletimno = txtI_no.Text.Trim();
+            string sifre = txtI_sifre.Text.Trim();
+            try
+            {
+                if (isletimno == "" || sifre == "")
+                {
+                    MessageBox.Show("lütfen tüm alanları doldurduğunuza emin olun.", "DİKKAT!!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+                baglanti.Open();
+                SqlParameter prm1 = new SqlParameter("@isletimno", isletimno);
+                SqlParameter prm2 = new SqlParameter("@sifre", sifre);
+                SqlCommand cmd = new SqlCommand("select * from FirmaKayit where IsletimNo=@isletimno AND Sifre=@sifre", baglanti);
+                cmd.Parameters.Add(prm1);
+                cmd.Parameters.Add(prm2);
+                DataTable dt = new DataTable();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                if (dt.Rows.Count > 0)
+                {
+                    FirmaKabulPaneli firmakabulpaneli = new FirmaKabulPaneli();
+                    firmakabulpaneli.Show();
+                    this.Hide();
+                }
+
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("Kullanıcı Adı ya da Şifre yanlış.", "HATALI GİRİŞ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            baglanti.Close();
+        }
