@@ -1,0 +1,74 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.SqlClient;
+
+namespace STAJ_TAKİP_SİSTEMİ
+{
+    public partial class KomisyonUyesiKayit : Form
+    {
+        public KomisyonUyesiKayit()
+        {
+            InitializeComponent();
+        }
+        SqlConnection baglanti = new SqlConnection("Data Source=localhost;Initial Catalog=StajSistemi;Integrated Security=True");
+        SqlDataAdapter da;
+        DataSet ds;
+        SqlCommandBuilder cmdb;
+
+        public void kayıtdoldur()
+        {
+            baglanti.Open();
+            da = new SqlDataAdapter("Select * from KomisyonUyeKayit", baglanti);
+            cmdb = new SqlCommandBuilder(da);
+            ds = new DataSet();
+            da.Fill(ds, "KomisyonUyeKayit");
+
+
+
+
+
+            baglanti.Close();
+        }
+        private void button4_Click(object sender, EventArgs e)
+        {
+            KomisyonUyeSilGüncelle ku = new KomisyonUyeSilGüncelle();
+            ku.ShowDialog();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            KomisyonUyeSilGüncelle ku = new KomisyonUyeSilGüncelle();
+            ku.ShowDialog();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            string ogrencino = textBox1.Text.Trim();
+            string baskan = textBox2.Text.Trim();
+            string uye1 = textBox3.Text.Trim();
+            string uye2 = textBox4.Text.Trim();
+            
+
+            SqlCommand cmd = new SqlCommand("insert into KomisyonUyeKayit (OgrenciNo,KomisyonUyeBaskani,Uye1,Uye2) values ('" + ogrencino + "','" + baskan + "','" + uye1+ "','" + uye2 + "')");
+
+            cmd.CommandType = CommandType.Text;
+            cmd.Connection = baglanti;
+            baglanti.Open();
+            int rowsAffected = cmd.ExecuteNonQuery();
+            baglanti.Close();
+            kayıtdoldur();
+        }
+
+        private void KomisyonUyesiKayit_Load(object sender, EventArgs e)
+        {
+            kayıtdoldur();
+        }
+    }
+}
