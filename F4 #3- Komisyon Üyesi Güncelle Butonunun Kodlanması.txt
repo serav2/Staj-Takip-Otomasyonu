@@ -1,0 +1,64 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.SqlClient;
+namespace STAJ_TAKİP_SİSTEMİ
+{
+    public partial class KomisyonUyeSilGüncelle : Form
+    {
+        public KomisyonUyeSilGüncelle()
+        {
+            InitializeComponent();
+        }
+        SqlConnection baglanti = new SqlConnection("Data Source=localhost;Initial Catalog=StajSistemi;Integrated Security=True");
+        SqlDataAdapter da;
+        DataSet ds;
+        SqlCommandBuilder cmdb;
+        public void kayıtdoldur()
+        {
+            baglanti.Open();
+            da = new SqlDataAdapter("Select * from KomisyonUyeKayit", baglanti);
+            cmdb = new SqlCommandBuilder(da);
+            ds = new DataSet();
+            da.Fill(ds, "KomisyonUyeKayit");
+            dataGridView1.DataSource = ds.Tables[0];
+
+
+            baglanti.Close();
+        }
+        void basvurugetir()
+        {
+            baglanti.Open();
+            da = new SqlDataAdapter("Select * from KomisyonUyeKayit", baglanti);
+            DataTable tablo = new DataTable();
+            da.Fill(tablo);
+            dataGridView1.DataSource = tablo;
+            baglanti.Close();
+        }
+        
+        private void KomisyonUyeSilGüncelle_Load(object sender, EventArgs e)
+        {
+            kayıtdoldur();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            baglanti.Open();
+     
+            SqlCommand cmd = new SqlCommand("update KomisyonUyeKayit set OgrenciNo='" + textBox1.Text + "',KomisyonUyeBaskani='" + textBox2.Text + "',Uye1='" + textBox3.Text + "',Uye2='" + textBox4.Text + "'  where OgrenciNo='" + dataGridView1.CurrentRow.Cells[1].Value.ToString() + "'", baglanti);
+            cmd.ExecuteNonQuery();
+
+            MessageBox.Show("kayıt güncellendi", "BİLGİ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            baglanti.Close();
+            kayıtdoldur();
+        }
+
+       
+    }
+}
