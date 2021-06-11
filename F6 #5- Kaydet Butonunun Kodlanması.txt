@@ -1,0 +1,75 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.SqlClient;
+
+namespace STAJ_TAKİP_SİSTEMİ
+{
+    public partial class OgrenciGiris : Form
+    {
+        public OgrenciGiris()
+        {
+            InitializeComponent();
+        }
+        SqlConnection baglanti = new SqlConnection("Data Source=localhost;Initial Catalog=StajSistemi;Integrated Security=True");
+        SqlDataAdapter da;
+        DataSet ds;
+        SqlCommandBuilder cmdb;
+        public void kayıtdoldur()
+        {
+            baglanti.Open();
+            da = new SqlDataAdapter("Select * from OgrenciGiris", baglanti);
+            cmdb = new SqlCommandBuilder(da);
+            ds = new DataSet();
+            da.Fill(ds, "OgrenciGiris");
+            dataGridView1.DataSource = ds.Tables[0];
+
+
+            baglanti.Close();
+        }
+        void basvurugetir()
+        {
+            baglanti.Open();
+            da = new SqlDataAdapter("Select * from OgrenciGiris", baglanti);
+            DataTable tablo = new DataTable();
+            da.Fill(tablo);
+            dataGridView2.DataSource = tablo;
+            baglanti.Close();
+        }
+      
+        private void button4_Click(object sender, EventArgs e)
+        {
+            string ogrencitc = textBox2.Text.Trim();
+            DateTime baslamatarihi = dateTimePicker1.Value;
+            string sqlBaslamaTarihi = baslamatarihi.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            DateTime bitirmetarihi = dateTimePicker2.Value;
+            string sqlBitirmeTarihi = bitirmetarihi.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            string calismasuresi = textBox4.Text.Trim();
+            DateTime girilentarih = dateTimePicker1.Value;
+            string sqlGirilenTarih = girilentarih.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            string yapilanisler = textBox7.Text.Trim();
+
+
+            SqlCommand cmd = new SqlCommand("insert into OgrenciGiris (OgrenciTC,BaslamaTarihi,BitirmeTarihi,CalismaSuresi,GirilenTarih,YapilanIsler) values ('" + ogrencitc + "','" + baslamatarihi + "','" + bitirmetarihi + "','" + calismasuresi + "','" + girilentarih + "','" + yapilanisler + "')");
+
+            cmd.CommandType = CommandType.Text;
+            cmd.Connection = baglanti;
+            baglanti.Open();
+            int rowsAffected = cmd.ExecuteNonQuery();
+            baglanti.Close();
+            kayıtdoldur();
+        }
+        private void Form2_Load(object sender, EventArgs e)
+        {
+            kayıtdoldur();
+        }
+
+      
+    }
+}
