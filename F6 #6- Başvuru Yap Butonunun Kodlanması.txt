@@ -1,0 +1,62 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.IO;
+using System.Data.SqlClient;
+
+namespace Staj_Takip_Sistemi
+{
+    public partial class ogrenci_basvuru : Form
+    {
+        public ogrenci_basvuru()
+        {
+            InitializeComponent();
+        }
+        string yeniyol = "";
+        string pdfyeniyol = "";
+        public static string dosyayolum;
+        sqlbaglantisi baglanti = new sqlbaglantisi();
+        private void ogrenci_basvuru_Load(object sender, EventArgs e)
+        {
+            aktifol();
+        }
+        public void aktifol()
+        {
+   
+            textBox1.Text = ogrenci.secili_firma.ToString();
+            lbl_ilan.Text = ogrenci.secili_basvuru.ToString();
+            textBox2.Text = ogrenci.secili_baslangic.ToString();
+            textBox3.Text = ogrenci.secili_bitis.ToString();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog filer = new OpenFileDialog();
+            filer.Filter = "PDF Files|*.pdf";
+            filer.Title = "PDF Dosyası Seçiniz..";
+            filer.ShowDialog();
+            dosyayolum = filer.FileName;
+            pdfyeniyol = Application.StartupPath + "\\pdf\\" + Guid.NewGuid().ToString() + ".pdf";
+            File.Copy(dosyayolum, pdfyeniyol);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            SqlCommand komut = new SqlCommand("insert into firma_basvurular(ogrenci_adsoyad,firma_adi,ogrenci_mesaj,ogrenci_cv,staj_onay,baslama_tarih,bitirme_tarih,basvuru_tarih) values('" + Form1.defter_sahibi_adi + "','" + textBox1.Text + "','" + textBox5.Text + "','" + Path.GetFileName(pdfyeniyol) + "','" + "Onay Bekliyor" + "','" + textBox2.Text + "','" + textBox3.Text + "','" + DateTime.Now.ToShortDateString() + "')", baglanti.baglan());
+            komut.ExecuteNonQuery();
+            MessageBox.Show("Kayıt İşlemi Başarılı");
+            this.Hide();
+        }
+    }
+}
